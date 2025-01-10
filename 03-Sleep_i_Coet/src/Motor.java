@@ -22,6 +22,12 @@ public class Motor extends Thread {
         else this.pot_objectiu=p; 
     }
 
+    public void setPotenciaActual(int p){ 
+        this.pot_actual=p; 
+    }
+
+    public int getPotencia() { return pot_actual; }
+
     public void run() {
         while(pot_actual!=pot_objectiu) {
             int espera = (random.nextInt(2) + 1) * 1000;

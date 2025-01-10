@@ -5,23 +5,25 @@ public class Coet {
     private static Motor[] motores = new Motor[4];
     private static int potencia;
 
-    private static void arranca() {
+    private static void arranca() throws Exception {
         System.out.println("Passant a potència " + potencia);
-        for(Motor motor : motores) {
-            if(!motor.isAlive()) motor.start();
+        for(int i = 0; i < motores.length; i++) {
+            if (motores[i] != null && motores[i].isAlive()) motores[i].setPotencia(potencia);
+            else {
+                int actual = 0;
+                if(motores[i]!=null) actual = motores[i].getPotencia();
+                motores[i] = new Motor("Motor "+i);
+                motores[i].setPotencia(potencia);
+                motores[i].setPotenciaActual(actual);
+                motores[i].start();
+            }
         }
     } 
 
     public static void main(String[] args) throws Exception {
-        for(int i=0; i<motores.length; i++) {
-            motores[i] = new Motor("Motor "+i);
-        }
         while(!exit) {
             try {potencia = Integer.parseInt(Entrada.readLine());} 
             catch(NumberFormatException e) { potencia = -1; }
-            for(Motor motor : motores) {
-                motor.setPotencia(potencia);
-            }
             arranca();
             if(potencia == 0) exit = true;
         }
