@@ -45,7 +45,11 @@ public class Treballador extends Thread {
             }
             edat_actual++;
         }
-        System.out.printf("%-10s -> edat: %d / total: %.2f%n", getName(), this.edat_actual, this.cobrat);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%-10s -> edat: %d / total: %.2f%n", getName(), this.edat_actual, this.cobrat);
     }
 
     public void espera() {

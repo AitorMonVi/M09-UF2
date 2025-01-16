@@ -22,5 +22,8 @@ public class Administracio {
                 treballador.join();
             } catch(InterruptedException e) {}
         }
+        for(Treballador treballador : administracio.poblacio_activa) {
+            System.out.print(treballador.toString());
+        }
     }
 }
