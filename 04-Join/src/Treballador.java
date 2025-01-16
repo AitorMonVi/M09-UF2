@@ -35,7 +35,6 @@ public class Treballador extends Thread {
     @Override
     public void run() {
         while(edat_actual!=edat_fi_treball) {   
-            edat_actual++;
             if(edat_actual>=edat_inici_treball) {
                 for(int i=0; i<12; i++) {
                     cobra();
@@ -44,6 +43,7 @@ public class Treballador extends Thread {
                     espera();
                 }
             }
+            edat_actual++;
         }
         System.out.printf("%-10s -> edat: %d / total: %.2f%n", getName(), this.edat_actual, this.cobrat);
     }
