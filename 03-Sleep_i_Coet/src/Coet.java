@@ -1,36 +1,42 @@
 /* */
 
 public class Coet {
-    private static boolean exit = false;
     private static Motor[] motores = new Motor[4];
-    private static int potencia;
 
-    public static void passaAPotencia(Motor motor, int p) throws Exception {
+    public static void passaAPotencia(int p) throws Exception {
             if(p>10 || p<0) throw new Exception("Potencia no valida");
-            else motor.setPotencia(p); 
+            else {
+                for(Motor motor : motores) {
+                    motor.setPotencia(p);
+                }
+            } 
     }
 
     private static void arranca() throws Exception {
-        System.out.println("Passant a potència " + potencia);
-        for(int i = 0; i < motores.length; i++) {
-            if (motores[i] != null && motores[i].isAlive()) passaAPotencia(motores[i], potencia);
-            else {
-                int actual = 0;
-                if(motores[i]!=null) actual = motores[i].getPotencia();
-                motores[i] = new Motor("Motor "+i);
-                passaAPotencia(motores[i], potencia);
-                motores[i].setPotenciaActual(actual);
-                motores[i].start();
-            }
+        for(Motor motor : motores) {
+            motor.start();
         }
-    } 
+    }
+
+    private static boolean continua() {
+        return motores[0].isAlive();
+    }
 
     public static void main(String[] args) throws Exception {
-        while(!exit) {
+        int potencia;
+        try {potencia = Integer.parseInt(Entrada.readLine());} 
+        catch(NumberFormatException e) { potencia = -1; }
+        for(int i=0; i<motores.length; i++) {
+            motores[i] = new Motor("Motor " + i, potencia);
+        }
+        // iniciamos los motores
+        arranca();
+
+        while(continua()) {
             try {potencia = Integer.parseInt(Entrada.readLine());} 
             catch(NumberFormatException e) { potencia = -1; }
-            arranca();
-            if(potencia == 0) exit = true;
+            passaAPotencia(potencia);
+            if(potencia==0) break;
         }
     }
 }
