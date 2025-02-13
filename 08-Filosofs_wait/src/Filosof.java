@@ -75,17 +75,14 @@ public class Filosof extends Thread {
 
     public boolean agafarForquilles() {
         synchronized (this) {
-            while (esquerra.getPropietari()!=-1) {
+            while (!agafaForquillaEsquerra()) {
                 try { wait(); }
                 catch (InterruptedException e) {}
             }
         }
 
-        agafaForquillaEsquerra();
-
-        if (dreta.getPropietari()==-1) agafaForquillaDreta();
-        else {
-            deixarForquilles();
+        if (!agafaForquillaDreta()) {
+            deixarForquillaEsquerra();
             System.out.printf("Filòsof: %s deixa l'esquerra(%d) i espera (dreta ocupada)%n", getName(), getNumeroEsquerra());
             return false;
         }
@@ -93,33 +90,47 @@ public class Filosof extends Thread {
         return true;
     }
 
-    public void agafaForquillaEsquerra() {
+    public boolean agafaForquillaEsquerra() {
         synchronized (esquerra) {
-            esquerra.setPropietari(numero);
+            if (esquerra.getPropietari()==-1) {
+                esquerra.setPropietari(numero);
+                System.out.printf("Filòsof: %s agafa la forquilla esquerra %d%n", getName(), getNumeroEsquerra());
+                return true;
+            }
         }
-        System.out.printf("Filòsof: %s agafa la forquilla esquerra %d%n", getName(), getNumeroEsquerra());
+        return false;
     }
 
-    public void agafaForquillaDreta() {
+    public boolean agafaForquillaDreta() {
         synchronized (dreta) {
-            dreta.setPropietari(numero);
+            if (dreta.getPropietari()==-1) {
+                dreta.setPropietari(numero);
+                System.out.printf("Filòsof: %s agafa la forquilla dreta %d%n", getName(), getNumeroDreta());
+                return true;
+            }
         }
-        System.out.printf("Filòsof: %s agafa la forquilla dreta %d%n", getName(), getNumeroDreta());
+        return false;
     }
 
-    public void deixarForquilles() {
+    public void deixarForquillaEsquerra() {
         synchronized (esquerra) {
             if (esquerra.getPropietari()==numero) {
                 esquerra.setLliure();
-                esquerra.notifyAll();
             }
         }
+    }
+
+    public void deixarForquillaDreta() {
         synchronized (dreta) {
             if (dreta.getPropietari()==numero) {
                 dreta.setLliure();
-                dreta.notifyAll();
             }
         }
+    }
+
+    public void deixarForquilles() {
+        deixarForquillaEsquerra();
+        deixarForquillaDreta();
     }
 
 }

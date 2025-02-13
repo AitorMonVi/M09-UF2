@@ -20,6 +20,9 @@ public class Forquilla {
     public int getPropietari() { return this.propietari; }
     public void setPropietari(int propietari) { this.propietari = propietari; }
 
-    public void setLliure() { this.propietari = LLIURE; }
+    public void setLliure() { 
+        this.propietari = LLIURE;
+        notifyAll(); 
+    }
 
 }
